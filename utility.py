@@ -49,7 +49,7 @@ class GridMap:
         return [[Grid((i, j), self.grid_count) for i in range(size)] for j in range(size)]
 
     def grid(self, x, y):
-        return self.grids[y][x]
+        return self.grids[int(y)][int(x)]
 
     def allGrids(self):
         #return [grid for grid in [row for row in self.grids]]
@@ -204,21 +204,3 @@ class Surface:
             print('transposed')
         return grids
 
-            
-###### test ####
-##a= GridMap(5,5)
-##a.grid(1, 1).occupy()
-##a.grid(1, 2).occupy()
-##a.grid(2, 1).occupy()
-##a.grid(2, 2).occupy()
-##b = Surface(a)
-##
-##
-##print a
-##print "len(b.complement_grids):", len(b.complement_grids)
-##print "len(a.occupiedGrids()):", len(a.occupiedGrids())
-##print "b.isVerticallyConvexedSurface():", b.isVerticallyConvexedSurface()
-##print "b.isHorizontallyConvexedSurface():", b.isHorizontallyConvexedSurface()
-##print "b.isClosedSurface():", b.isClosedSurface()
-##print "b.isValidShape():", b.isValidShape()
-###### test ####

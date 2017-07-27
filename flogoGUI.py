@@ -39,7 +39,8 @@ class App:
     def __init__(self, root):
         self.root = root
         self.root.title(self.title_text)
-        self.root.geometry(self.getGeometry(self.width + self.excess_width, self.height))
+        # self.root.geometry(self.getGeometry(self.width + self.excess_width, self.height))
+
 
         self.help_lbl = Label(self.root, text="Draw on the grids. Once it is a closed surface, press Display!",
                               justify=CENTER, wraplength=80)
