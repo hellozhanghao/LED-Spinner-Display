@@ -104,11 +104,11 @@ class Surface:
             x, y = grid
             #print "complement grid coord({},{}): ".format(x, y)
             top_clear = True
-            for y_coord in xrange(y - 1, -1, -1):
+            for y_coord in range(y - 1, -1, -1):
                 if self.grid_map.grid(x, y_coord).isPrintable():
                     top_clear = False
                     break
-            for y_coord in xrange(y + 1, self.grid_map.grid_count):
+            for y_coord in range(y + 1, self.grid_map.grid_count):
                 if self.grid_map.grid(x, y_coord).isPrintable():
                     if not top_clear: return False
         return True         
@@ -118,11 +118,11 @@ class Surface:
             x, y = grid
             #print "complement grid coord({},{}): ".format(x, y)
             left_clear = True
-            for x_coord in xrange(x - 1, -1, -1):
+            for x_coord in range(x - 1, -1, -1):
                 if self.grid_map.grid(x_coord, y).isPrintable():
                     left_clear = False
                     break
-            for x_coord in xrange(x + 1, self.grid_map.grid_count):
+            for x_coord in range(x + 1, self.grid_map.grid_count):
                 if self.grid_map.grid(x_coord, y).isPrintable():
                     if not left_clear: return False
         return True         
@@ -200,8 +200,8 @@ class Surface:
         grids = self.grid_map.grids
         if not self.isHorizontallyConvexedSurface():
             # transpose matrix
-            grids = zip(*grids)
-            print 'transposed'
+            grids = list(zip(*grids))
+            print('transposed')
         return grids
 
             

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from Tkinter import *
-import tkFileDialog
+from tkinter import *
+import tkinter.filedialog
 from PIL import Image, ImageTk
 from utility import *
 import serial
@@ -26,22 +26,23 @@ for i in range(GRID_COUNT):
         temp.append(0)
     matrix.append(temp)
 
-
 SHUTTER_LIMIT = 22
 sys.setrecursionlimit(3500)
+
 
 class App:
     width = 800
     height = 800
     excess_width = 116
     title_text = "{}LED display GUI version 2{}".format(45 * ' ', 45 * ' ')
+
     def __init__(self, root):
         self.root = root
         self.root.title(self.title_text)
-        self.root.geometry(self.getGeometry(self.width + self.excess_width, self.height))
+        # self.root.geometry(self.getGeometry(self.width + self.excess_width, self.height))
 
-
-        self.help_lbl = Label(self.root, text="Draw on the grids. Once it is a closed surface, press Display!", justify=CENTER, wraplength=80)
+        self.help_lbl = Label(self.root, text="Draw on the grids. Once it is a closed surface, press Display!",
+                              justify=CENTER, wraplength=80)
         self.help_lbl.grid(row=0, column=0)
 
         self.mode_btn = Button(self.root, text="Erase", command=self.changeMode)
@@ -88,7 +89,7 @@ class App:
 
         self.createGrids(GRID_COUNT)
 
-        self.isMouseDown = False        
+        self.isMouseDown = False
 
         self.ser = None
         self.serial_msg = None
@@ -102,7 +103,7 @@ class App:
         for port in COM_PORT:
             try:
                 self.ser = serial.Serial(port, BAUD_RATE, timeout=TIME_OUT)
-                print("Connected to", port)
+                print(("Connected to", port))
                 break
             except:
                 continue
@@ -117,7 +118,7 @@ class App:
             serial_msg = self.ser.readline().strip()
             if serial_msg:
                 self.serial_msg = serial_msg
-                print(self.serial_msg)
+                print((self.serial_msg))
 
     def eventLoop(self):
         if self.toplevel is None:
@@ -135,16 +136,16 @@ class App:
     def updateCanvas(self):
         for grid in self.grid_map.allGrids():
             if grid.isPrintable():
-                self.canvas.itemconfig(grid.ID, fill = 'CYAN')
+                self.canvas.itemconfig(grid.ID, fill='CYAN')
             else:
-                self.canvas.itemconfig(grid.ID, fill = 'WHITE')
+                self.canvas.itemconfig(grid.ID, fill='WHITE')
 
     def updateSingleGrid(self, coord):
         grid = self.grid_map.grid(*self.grid_map.pixelToGridCoord(coord))
         if grid.isOccupied():
-            self.canvas.itemconfig(grid.ID, fill = 'CYAN')
+            self.canvas.itemconfig(grid.ID, fill='CYAN')
         else:
-            self.canvas.itemconfig(grid.ID, fill = 'WHITE')
+            self.canvas.itemconfig(grid.ID, fill='WHITE')
 
     def createGrids(self, side_count):
         g_width = self.width / side_count
@@ -158,19 +159,18 @@ class App:
                                                                             (j + 1) * g_height,
                                                                             fill='WHITE', width=1))
 
-
     def getGeometry(self, w, h):
         ws = self.root.winfo_screenwidth()
         hs = self.root.winfo_screenheight()
-        x = (ws/2) - (w/2)
-        y = (hs/2) - (h/2)
+        x = (ws / 2) - (w / 2)
+        y = (hs / 2) - (h / 2)
         return '{}x{}+{}+{}'.format(w, h, x, y)
 
     def motion(self, event):
         if self.isMouseDown:
             self.grid_map.clicked((event.x, event.y))
             self.updateSingleGrid((event.x, event.y))
-            #print 'x: {}, y: {}'.format(event.x, event.y)
+            # print 'x: {}, y: {}'.format(event.x, event.y)
 
     def mouseDown(self, event):
         self.isMouseDown = True
@@ -185,9 +185,9 @@ class App:
         self.surface = Surface(self.grid_map)
         self.surface.fillSurface()
         self.updateCanvas()
-        #if self.surface.isClosedSurface():
-            #self.surface.fillSurface()
-            #self.updateCanvas()
+        # if self.surface.isClosedSurface():
+        # self.surface.fillSurface()
+        # self.updateCanvas()
 
     def reset(self):
         self.createGrids(GRID_COUNT)
@@ -218,9 +218,9 @@ class App:
                 self.serial_msg = None
                 self.serialWrite('F')
             else:
-                print "Arduino is busy"
+                print("Arduino is busy")
         else:
-            print "Arduino is not connected"
+            print("Arduino is not connected")
 
     def forceClose(self):
         if self.ser is not None:
@@ -228,9 +228,9 @@ class App:
                 self.serial_msg = None
                 self.serialWrite('X')
             else:
-                print "Arduino is busy"
+                print("Arduino is busy")
         else:
-            print "Arduino is not connected"
+            print("Arduino is not connected")
 
     def forceStop(self):
         if self.ser is not None:
@@ -238,9 +238,9 @@ class App:
                 self.serial_msg = None
                 self.serialWrite('S')
             else:
-                print "Shutter is not moving!"
+                print("Shutter is not moving!")
         else:
-            print "Arduino is not connected"
+            print("Arduino is not connected")
 
     def hardReset(self):
         if self.ser is not None:
@@ -248,9 +248,9 @@ class App:
                 self.serial_msg = None
                 self.serialWrite('H')
             else:
-                print "Arduino is busy"
+                print("Arduino is busy")
         else:
-            print "Arduino is not connected"
+            print("Arduino is not connected")
 
     def checkReady(self):
         self.probeArduino()
@@ -260,8 +260,9 @@ class App:
             self.toplevel.withdraw()
 
         try:
-            image_file = tkFileDialog.askopenfile(initialdir="./sample pictures")
-            self.image_handle = ImageTk.PhotoImage(Image.open(image_file.name).resize((self.width, self.height), Image.ANTIALIAS))
+            image_file = tkinter.filedialog.askopenfile(initialdir="./sample pictures")
+            self.image_handle = ImageTk.PhotoImage(
+                Image.open(image_file.name).resize((self.width, self.height), Image.ANTIALIAS))
 
             if self.toplevel is not None:
                 self.toplevel.destroy()
@@ -269,15 +270,15 @@ class App:
             self.setupOverlayingWindow()
         except:
             if image_file is not None:
-                print "Invalid image"
+                print("Invalid image")
 
         if self.toplevel is not None:
             self.toplevel.deiconify()
-        
+
     def setupOverlayingWindow(self):
         self.toplevel = Toplevel(self.root,
-                             width=self.width,
-                             height=self.height)
+                                 width=self.width,
+                                 height=self.height)
 
         self.toplevel.title("Press the X >> to close the loaded image")
 
@@ -285,14 +286,14 @@ class App:
                                                     self.height,
                                                     self.root.winfo_x() + self.excess_width,
                                                     self.root.winfo_y()))
-        
+
         self.toplevel.wait_visibility(self.toplevel)
         self.toplevel.wm_attributes("-alpha", 0.5)
         self.toplevel.wm_attributes("-topmost", 1)
 
         self.toplevel_canvas = Canvas(self.toplevel,
-                                 width=self.width,
-                                 height=self.height)
+                                      width=self.width,
+                                      height=self.height)
 
         self.toplevel_canvas.pack()
 
@@ -300,7 +301,7 @@ class App:
         self.toplevel_canvas.bind('<Button-1>', self.mouseDown)
         self.toplevel_canvas.bind('<ButtonRelease-1>', self.mouseUp)
 
-        self.toplevel_image = self.toplevel_canvas.create_image(0, 0, image=self.image_handle, anchor=N+W)
+        self.toplevel_image = self.toplevel_canvas.create_image(0, 0, image=self.image_handle, anchor=N + W)
 
         self.toplevel.protocol("WM_DELETE_WINDOW", self.toplevelDestroyed)
 
@@ -318,7 +319,7 @@ class App:
     def printFoam(self):
         self.surface.fillSurface()
         if not self.surface.isValidShape():
-            print "Invalid shape"
+            print("Invalid shape")
         else:
             grids = self.surface.getGridForPrinting()
             for i in grids:
@@ -326,23 +327,23 @@ class App:
                     if a.state != '-':
                         matrix[a.grid_coord[1]][a.grid_coord[0]] = 1
             for i in matrix:
-                print i
+                print(i)
 
 
 
-            # if self.serial_msg == "ready":
-            #     self.serial_msg = None
-            #     self.serialWrite('B')
-            #     for msg in self.getMsgForArduino(grids):
-            #         print msg
-            #         self.serialWrite('S{}E'.format(msg))
-            # else:
-            #     if self.ser is None:
-            #         print "Arduino is not connected, but here's the output anyway:"
-            #         for msg in self.getMsgForArduino(grids):
-            #             print msg
-            #     else:
-            #         print "Arduino is busy"
+                # if self.serial_msg == "ready":
+                #     self.serial_msg = None
+                #     self.serialWrite('B')
+                #     for msg in self.getMsgForArduino(grids):
+                #         print msg
+                #         self.serialWrite('S{}E'.format(msg))
+                # else:
+                #     if self.ser is None:
+                #         print "Arduino is not connected, but here's the output anyway:"
+                #         for msg in self.getMsgForArduino(grids):
+                #             print msg
+                #     else:
+                #         print "Arduino is busy"
 
     def getMsgForArduino(self, grids):
         for row, lhs, rhs in self.getShutterSteps(grids):
@@ -365,7 +366,7 @@ class App:
             rhs = SHUTTER_LIMIT if rhs >= SHUTTER_LIMIT else rhs
 
             if lhs >= SHUTTER_LIMIT or rhs >= SHUTTER_LIMIT:
-                print "Shutter steps restricted due to limited length."
+                print("Shutter steps restricted due to limited length.")
 
             yield (row, lhs, rhs)
 
@@ -375,7 +376,8 @@ class App:
 
     def probeArduino(self):
         self.serialWrite('R')
-        
+
+
 root = Tk()
 app = App(root)
 root.mainloop()
