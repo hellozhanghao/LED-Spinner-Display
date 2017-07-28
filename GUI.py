@@ -55,26 +55,7 @@ class App:
         self.reset_btn = Button(self.root, text="Draw again", command=self.reset)
         self.reset_btn.grid(row=3, column=0)
 
-        # self.open_shutter_btn = Button(self.root, text="Open shutters", command=self.openShutter)
-        # self.open_shutter_btn.grid(row=4, column=0)
-        #
-        # self.close_shutter_btn = Button(self.root, text="Close shutters", command=self.closeShutter)
-        # self.close_shutter_btn.grid(row=5, column=0)
-        #
-        # self.force_open_btn = Button(self.root, text="Force open shutters", command=self.forceOpen)
-        # self.force_open_btn.grid(row=6, column=0)
-        #
-        # self.force_close_btn = Button(self.root, text="Force close shutters", command=self.forceClose)
-        # self.force_close_btn.grid(row=7, column=0)
-        #
-        # self.force_stop_btn = Button(self.root, text="Force shutters\nto stop", command=self.forceStop)
-        # self.force_stop_btn.grid(row=8, column=0)
-        #
-        # self.hard_reset_btn = Button(self.root, text="Hard reset", command=self.hardReset)
-        # self.hard_reset_btn.grid(row=9, column=0)
-        #
-        # self.check_ready_btn = Button(self.root, text="Check readiness", command=self.checkReady)
-        # self.check_ready_btn.grid(row=10, column=0)
+
 
         self.load_image_btn = Button(self.root, text="Load image", command=self.loadImage)
         self.load_image_btn.grid(row=4, column=0)
@@ -187,8 +168,8 @@ class App:
         self.surface.fillSurface()
         self.updateCanvas()
         # if self.surface.isClosedSurface():
-        # self.surface.fillSurface()
-        # self.updateCanvas()
+        #     self.surface.fillSurface()
+        #     self.updateCanvas()
 
     def reset(self):
         self.createGrids(GRID_COUNT)
@@ -331,20 +312,6 @@ class App:
                 print(i)
 
 
-
-                # if self.serial_msg == "ready":
-                #     self.serial_msg = None
-                #     self.serialWrite('B')
-                #     for msg in self.getMsgForArduino(grids):
-                #         print msg
-                #         self.serialWrite('S{}E'.format(msg))
-                # else:
-                #     if self.ser is None:
-                #         print "Arduino is not connected, but here's the output anyway:"
-                #         for msg in self.getMsgForArduino(grids):
-                #             print msg
-                #     else:
-                #         print "Arduino is busy"
 
     def getMsgForArduino(self, grids):
         for row, lhs, rhs in self.getShutterSteps(grids):

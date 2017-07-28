@@ -1,6 +1,8 @@
 import numpy as np
 import pprint
 import scipy
+import matplotlib.pyplot as plt
+import math
 
 pp = pprint.PrettyPrinter(indent=5)
 
@@ -33,33 +35,23 @@ class Image:
                 if float((i - self.radius) ** 2 + (j - self.radius) ** 2) ** 0.5 > self.radius:
                     self.data[i][j] = 0
 
-    def slice(self,div):
-        # -- Generate some data...
-        x, y = np.mgrid[-5:5:0.1, -5:5:0.1]
-        z = np.sqrt(x ** 2 + y ** 2) + np.sin(x ** 2 + y ** 2)
-        lena = scipy.misc.lena()  # ADDED THIS ASYMMETRIC IMAGE
-        z = lena[320:420, 330:430]  # ADDED THIS ASYMMETRIC IMAGE
+    def slice(self, div):
+        ans = []
+        for i in range(div):
+            angle = (2 * math.pi / div) * i
+            ans.append([])
+            # print(self.radius)
+            for j in range(self.radius+1):
+                x = self.radius + j * math.sin(angle)
+                y = self.radius + j * math.cos(angle)
+                x, y = int(round(x)), int(round(y))
+                print(x,y)
+                ans[-1].append(self.data[x][y])
 
-        # -- Extract the line...
-        # Make a line with "num" points...
-        x0, y0 = 5, 4.5  # These are in _pixel_ coordinates!!
-        x1, y1 = 60, 75
-        num = 500
-        x, y = np.linspace(x0, x1, num), np.linspace(y0, y1, num)
+        pp.pprint(ans)
 
-        # Extract the values along the line, using cubic interpolation
-        # zi = scipy.ndimage.map_coordinates(z, np.vstack((x, y)))  # THIS DOESN'T WORK CORRECTLY
-        zi = scipy.ndimage.map_coordinates(np.transpose(z), np.vstack((x, y)))  # THIS SEEMS TO WORK CORRECTLY
 
-        # -- Plot...
-        fig, axes = plt.subplots(nrows=2)
-        axes[0].imshow(z)
-        axes[0].plot([x0, x1], [y0, y1], 'ro-')
-        axes[0].axis('image')
-
-        axes[1].plot(zi)
-
-        plt.show()
+                # pp.pprint(self.data)
 
 
 data = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -84,19 +76,21 @@ data = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
-image = Image(10,data)
+image = Image(10, data)
 image.trim()
-pp.pprint(image.data)
+# pp.pprint(image.data)
 
 
-sliced = [  [0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
-            [0, 0, 1, 1, 0, 0, 0, 1, 1, 1],
-            [0, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [0, 0, 1, 1, 0, 0, 0, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
-            [0, 0, 1, 1, 0, 0, 0, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 0, 0, 1, 1, 1, 1, 1],
-            ]
+sliced = [[0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
+          [0, 0, 1, 1, 0, 0, 0, 1, 1, 1],
+          [0, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+          [0, 0, 1, 1, 0, 0, 0, 1, 1, 1],
+          [1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+          [0, 0, 1, 1, 0, 0, 0, 1, 1, 1],
+          [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+          [1, 1, 1, 0, 0, 1, 1, 1, 1, 1],
+          ]
 
-pp.pprint(sliced)
+# pp.pprint(sliced)
+
+image.slice(64)
