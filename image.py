@@ -56,18 +56,18 @@ class Image:
 def run(data):
     image = Image(15, data)
     image.trim()
-    # pp.pprint(image.data)
+    print(image.data)
 
-    ans = "{"
-    for line in image.slice(50):
-        ans += "{"
+    ans = "["
+    for line in image.slice(47):
+        ans += "["
         for char in line:
             ans += str(char)
             ans += ","
         ans = ans[:-1]
-        ans +="},\n"
+        ans +="],\n"
     ans = ans[:-2]
-    ans += "}"
+    ans += "]"
 
     print(ans)
 
