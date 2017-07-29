@@ -1,19 +1,22 @@
-import numpy as np
-import pprint
-import scipy
-import matplotlib.pyplot as plt
 import math
+import pprint
 
 pp = pprint.PrettyPrinter(indent=5)
 
 
-class Pixel:
-    def __init__(self, xpos, ypos):
-        self.xpos = xpos
-        self.ypos = ypos
+import serial
 
-    def distance(self, other):
-        return (float(self.xpos - other.xpos) ** 2 + (self.ypos - other.ypos) ** 2) ** 0.5
+import time
+port='/dev/tty.Bluetooth-Incoming-Port'
+
+bluetooth = serial.Serial(port,9600)
+bluetooth.flushInput()
+print("Connected")
+
+bluetooth.write(b'asdfasdf')
+bluetooth.flush()
+
+
 
 
 class Image:
@@ -40,57 +43,34 @@ class Image:
         for i in range(div):
             angle = (2 * math.pi / div) * i
             ans.append([])
-            # print(self.radius)
-            for j in range(self.radius+1):
+            for j in range(self.radius + 1):
                 x = self.radius + j * math.sin(angle)
                 y = self.radius + j * math.cos(angle)
                 x, y = int(round(x)), int(round(y))
-                print(x,y)
+                # print(x,y)
                 ans[-1].append(self.data[x][y])
 
-        pp.pprint(ans)
+        return ans
 
 
-                # pp.pprint(self.data)
+def run(data):
+    image = Image(15, data)
+    image.trim()
+    # pp.pprint(image.data)
+
+    ans = "{"
+    for line in image.slice(50):
+        ans += "{"
+        for char in line:
+            ans += str(char)
+            ans += ","
+        ans = ans[:-1]
+        ans +="},\n"
+    ans = ans[:-2]
+    ans += "}"
+
+    print(ans)
 
 
-data = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
-        [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
-        [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
-        [0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0],
-        [0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0],
-        [0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0],
-        [0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0],
-        [0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
-        [1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
-        [0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0],
-        [0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0],
-        [0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0],
-        [0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0],
-        [0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0],
-        [0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0],
-        [0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0],
-        [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-
-image = Image(10, data)
-image.trim()
-# pp.pprint(image.data)
 
 
-sliced = [[0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
-          [0, 0, 1, 1, 0, 0, 0, 1, 1, 1],
-          [0, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-          [0, 0, 1, 1, 0, 0, 0, 1, 1, 1],
-          [1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
-          [0, 0, 1, 1, 0, 0, 0, 1, 1, 1],
-          [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-          [1, 1, 1, 0, 0, 1, 1, 1, 1, 1],
-          ]
-
-# pp.pprint(sliced)
-
-image.slice(64)

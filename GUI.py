@@ -6,6 +6,7 @@ from PIL import Image, ImageTk
 from utility import *
 import serial
 import sys
+import image
 
 COM_PORT = ['/dev/ttyUSB4',
             '/dev/ttyUSB5',
@@ -18,7 +19,7 @@ COM_PORT = ['/dev/ttyUSB4',
             'COM8']
 BAUD_RATE = 9600
 TIME_OUT = 0.001
-GRID_COUNT = 16
+GRID_COUNT = 31
 matrix = []
 for i in range(GRID_COUNT):
     temp = []
@@ -184,55 +185,55 @@ class App:
         else:
             print("Arduino is not connected")
 
-    def closeShutter(self):
-        if self.ser is not None:
-            if self.serial_msg == "ready":
-                self.serial_msg = None
-                self.serialWrite('C')
-            else:
-                print("Arduino is busy")
-        else:
-            print("Arduino is not connected")
-
-    def forceOpen(self):
-        if self.ser is not None:
-            if self.serial_msg == "ready":
-                self.serial_msg = None
-                self.serialWrite('F')
-            else:
-                print("Arduino is busy")
-        else:
-            print("Arduino is not connected")
-
-    def forceClose(self):
-        if self.ser is not None:
-            if self.serial_msg == "ready":
-                self.serial_msg = None
-                self.serialWrite('X')
-            else:
-                print("Arduino is busy")
-        else:
-            print("Arduino is not connected")
-
-    def forceStop(self):
-        if self.ser is not None:
-            if self.serial_msg != "ready":
-                self.serial_msg = None
-                self.serialWrite('S')
-            else:
-                print("Shutter is not moving!")
-        else:
-            print("Arduino is not connected")
-
-    def hardReset(self):
-        if self.ser is not None:
-            if self.serial_msg == "ready":
-                self.serial_msg = None
-                self.serialWrite('H')
-            else:
-                print("Arduino is busy")
-        else:
-            print("Arduino is not connected")
+    # def closeShutter(self):
+    #     if self.ser is not None:
+    #         if self.serial_msg == "ready":
+    #             self.serial_msg = None
+    #             self.serialWrite('C')
+    #         else:
+    #             print("Arduino is busy")
+    #     else:
+    #         print("Arduino is not connected")
+    #
+    # def forceOpen(self):
+    #     if self.ser is not None:
+    #         if self.serial_msg == "ready":
+    #             self.serial_msg = None
+    #             self.serialWrite('F')
+    #         else:
+    #             print("Arduino is busy")
+    #     else:
+    #         print("Arduino is not connected")
+    #
+    # def forceClose(self):
+    #     if self.ser is not None:
+    #         if self.serial_msg == "ready":
+    #             self.serial_msg = None
+    #             self.serialWrite('X')
+    #         else:
+    #             print("Arduino is busy")
+    #     else:
+    #         print("Arduino is not connected")
+    #
+    # def forceStop(self):
+    #     if self.ser is not None:
+    #         if self.serial_msg != "ready":
+    #             self.serial_msg = None
+    #             self.serialWrite('S')
+    #         else:
+    #             print("Shutter is not moving!")
+    #     else:
+    #         print("Arduino is not connected")
+    #
+    # def hardReset(self):
+    #     if self.ser is not None:
+    #         if self.serial_msg == "ready":
+    #             self.serial_msg = None
+    #             self.serialWrite('H')
+    #         else:
+    #             print("Arduino is busy")
+    #     else:
+    #         print("Arduino is not connected")
 
     def checkReady(self):
         self.probeArduino()
@@ -300,17 +301,17 @@ class App:
 
     def printFoam(self):
         self.surface.fillSurface()
-        if not self.surface.isValidShape():
-            print("Invalid shape")
-        else:
-            grids = self.surface.getGridForPrinting()
-            for i in grids:
-                for a in i:
-                    if a.state != '-':
-                        matrix[a.grid_coord[1]][a.grid_coord[0]] = 1
-            for i in matrix:
-                print(i)
+        grids = self.surface.getGridForPrinting()
+        for i in grids:
+            for a in i:
+                if a.state != '-':
+                    matrix[a.grid_coord[1]][a.grid_coord[0]] = 1
+        image.run(matrix)
 
+    # def wtf(self, data):
+    #     for i in data:
+    #         for a in i:
+    #             print(a)
 
 
     def getMsgForArduino(self, grids):
