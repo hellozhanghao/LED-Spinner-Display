@@ -53,8 +53,8 @@ class App:
         self.print_btn = Button(self.root, text="Display!", command=self.printFoam)
         self.print_btn.grid(row=2, column=0)
 
-        # self.reset_btn = Button(self.root, text="Draw again", command=self.reset)
-        # self.reset_btn.grid(row=3, column=0)
+        self.reset_btn = Button(self.root, text="Draw again", command=self.reset)
+        self.reset_btn.grid(row=3, column=0)
 
 
 
