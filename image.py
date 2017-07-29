@@ -3,22 +3,6 @@ import pprint
 
 pp = pprint.PrettyPrinter(indent=5)
 
-
-import serial
-
-import time
-port='/dev/tty.Bluetooth-Incoming-Port'
-
-bluetooth = serial.Serial(port,9600)
-bluetooth.flushInput()
-print("Connected")
-
-bluetooth.write(b'asdfasdf')
-bluetooth.flush()
-
-
-
-
 class Image:
     def __init__(self, radius, data=None):
         self.radius = radius
