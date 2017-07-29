@@ -71,7 +71,7 @@ for line in data:
             bluetooth.write(b'1')
         else:
             bluetooth.write(b'2')
-
+        time.sleep(0.01)
     bluetooth.write(b'n')
 bluetooth.write(b'e')
 

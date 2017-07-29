@@ -1,7 +1,15 @@
 import math
 import pprint
+import time
+import serial
 
 pp = pprint.PrettyPrinter(indent=5)
+
+
+port = 'COM4'
+
+bluetooth = serial.Serial(port, 115200, timeout=1)
+print("Connected")
 
 class Image:
     def __init__(self, radius, data=None):
@@ -40,21 +48,34 @@ class Image:
 def run(data):
     image = Image(15, data)
     image.trim()
-    print(image.data)
+    # print(image.data)
 
-    ans = "["
-    for line in image.slice(47):
-        ans += "["
-        for char in line:
-            ans += str(char)
-            ans += ","
-        ans = ans[:-1]
-        ans +="],\n"
-    ans = ans[:-2]
-    ans += "]"
+    # ans = "["
+    # for line in image.slice(47):
+    #     ans += "["
+    #     for char in line:
+    #         ans += str(char)
+    #         ans += ","
+    #     ans = ans[:-1]
+    #     ans +="],\n"
+    # ans = ans[:-2]
+    # ans += "]"
 
-    print(ans)
+    upload(image.slice(47))
 
+def upload(data):
+    time.sleep(4)
+    print("Upload Start!")
+    for line in data:
+        for digit in line:
+            if digit == 1:
+                bluetooth.write(b'1')
+            else:
+                bluetooth.write(b'2')
+            time.sleep(0.01)
+        bluetooth.write(b'n')
+    bluetooth.write(b'e')
+    print("Upload finished!")
 
 
 
